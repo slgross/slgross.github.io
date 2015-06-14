@@ -486,9 +486,7 @@ window.performance.measure("measure_pizza_generation", "mark_start_generating", 
 var timeToGenerate = window.performance.getEntriesByName("measure_pizza_generation");
 console.log("Time to generate pizzas on load: " + timeToGenerate[0].duration + "ms");
 
-// go for number of times the pizzas in the background have scrolled.
-// Used by updatePositions() to decide when to log the avg time/ frame
-var frame = 0;
+// go for number of times the pizzas in the background scrolled.
 
 // Logs the average amount of time per 10 frames needed to move the sliding background pizzas on scroll.
 function logAverageFrame(times) {   // times is the array of User Timing measurements from updatePositions()
@@ -500,7 +498,7 @@ function logAverageFrame(times) {   // times is the array of User Timing measure
   console.log("Average time to generate last 10 frames: " + sum / 10 + "ms");
 }
 
-// The following code for sliding background pizzas was pulled from Ilya's demo found at:
+// The following code for sliding background pizzas was pulled from Ilya's demo at:
 // https://www.igvita.com/slides/2012/devtools-tips-and-tricks/jank-demo.html
 
 // moved document.getElementsByClassName outside of function
@@ -534,7 +532,6 @@ function updatePositions() {
   }
 }
 
-
 // runs updatePositions on scroll
 window.addEventListener('scroll', updatePositions);
 
@@ -542,12 +539,9 @@ window.addEventListener('scroll', updatePositions);
 document.addEventListener('DOMContentLoaded', function() {
   var cols = 8;
   var s = 256;
-  var rows = Math.ceil((window.innerHeight / s));
-  var numPizzas = rows * cols;
-  
   // calculate number of pizzas to fill window
-  // var numPizzas = ( cols * ( Math.max ( window.screen.availHeight, window.screen.availWidth ) / s ) );
-  // numPizzas = Math.max ( 43, numPizzas ); // numPizzas can't be lower than 43
+  var numPizzas = ( cols * ( Math.max ( window.screen.availHeight, window.screen.availWidth ) / s ) );
+  numPizzas = Math.max ( 43, numPizzas ); // numPizzas can't be lower than 43
   for (var i = 0; i < numPizzas; i++) {
     var elem = document.createElement('img');
     elem.className = 'mover';
@@ -559,7 +553,6 @@ document.addEventListener('DOMContentLoaded', function() {
     elem.style.top = (Math.floor(i / cols) * s) + 'px';
     // replace document.querySelector("#movingPizzas1").appendChild(elem); with faster document.getElementById
     document.getElementById("movingPizzas1").appendChild(elem);
-    scrollPizzas.push(elem);
   }
   updatePositions();
 });
