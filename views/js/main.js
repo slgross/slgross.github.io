@@ -299,10 +299,6 @@ function randomName() {
 }
 
 // These functions return a string of a random ingredient from each respective category of ingredients.
-var selectRandomMeat = function() {
-  var randomMeat = pizzaIngredients.meats[Math.floor((Math.random() * pizzaIngredients.meats.length))];
-  return randomMeat;
-};
 
 // cache the length calculation so it's not done in the function each time
 var meatLength = pizzaIngredients.meats.length;
@@ -537,9 +533,9 @@ window.addEventListener('scroll', updatePositions);
 document.addEventListener('DOMContentLoaded', function() {
   var cols = 8;
   var s = 256;
-  var numPizzas = window.screen.availWidth / (73 * 8);
-
-  for (var i = 0; i < numPizzas; i++) {
+  //num is result of resoultion widh / elem.style.width * cols;
+  var num = window.screen.availWidth / 73 * 8;
+  for (var i = 0; i < num; i++) {
     var elem = document.createElement('img');
     elem.className = 'mover';
     elem.src = "images/pizza.png";
@@ -547,7 +543,6 @@ document.addEventListener('DOMContentLoaded', function() {
     elem.style.width = "73.333px";
     elem.basicLeft = (i % cols) * s;
     elem.style.top = (Math.floor(i / cols) * s) + 'px';
-    // replace document.querySelector("#movingPizzas1").appendChild(elem); with faster document.getElementById
     document.getElementById("movingPizzas1").appendChild(elem);
   }
   updatePositions();
