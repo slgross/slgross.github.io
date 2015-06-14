@@ -542,9 +542,12 @@ window.addEventListener('scroll', updatePositions);
 document.addEventListener('DOMContentLoaded', function() {
   var cols = 8;
   var s = 256;
+  var rows = Math.ceil((window.innerHeight / s));
+  var numPizzas = rows * cols;
+  
   // calculate number of pizzas to fill window
-  var numPizzas = ( cols * ( Math.max ( window.screen.availHeight, window.screen.availWidth ) / s ) );
-  numPizzas = Math.max ( 43, numPizzas ); // numPizzas can't be lower than 43
+  // var numPizzas = ( cols * ( Math.max ( window.screen.availHeight, window.screen.availWidth ) / s ) );
+  // numPizzas = Math.max ( 43, numPizzas ); // numPizzas can't be lower than 43
   for (var i = 0; i < numPizzas; i++) {
     var elem = document.createElement('img');
     elem.className = 'mover';
@@ -556,6 +559,7 @@ document.addEventListener('DOMContentLoaded', function() {
     elem.style.top = (Math.floor(i / cols) * s) + 'px';
     // replace document.querySelector("#movingPizzas1").appendChild(elem); with faster document.getElementById
     document.getElementById("movingPizzas1").appendChild(elem);
+    scrollPizzas.push(elem);
   }
   updatePositions();
 });
