@@ -280,21 +280,22 @@ function getNoun(y) {
 
 var adjectives = ["dark", "color", "whimsical", "shiny", "noise", "apocalyptic", "insulting", "praise", "scientific"];  // types of adjectives for pizza titles
 var nouns = ["animals", "everyday", "fantasy", "gross", "horror", "jewelry", "places", "scifi"];                        // types of nouns for pizza titles
-
+var adjlen = adjectives.length;
+var nounlen = noun.length;
 // Generates random numbers for getAdj and getNoun functions and returns a new pizza name
 function generator(adj, noun) {
   var adjectives = getAdj(adj);
   var nouns = getNoun(noun);
-  var randomAdjective = parseInt(Math.random() * adjectives.length);
-  var randomNoun = parseInt(Math.random() * nouns.length);
+  var randomAdjective = parseInt(Math.random() * adjlen);
+  var randomNoun = parseInt(Math.random() * nounlen);
   var name = "The " + adjectives[randomAdjective].capitalize() + " " + nouns[randomNoun].capitalize();
   return name;
 }
 
 // Chooses random adjective and random noun
 function randomName() {
-  var randomNumberAdj = parseInt(Math.random() * adjectives.length);
-  var randomNumberNoun = parseInt(Math.random() * nouns.length);
+  var randomNumberAdj = parseInt(Math.random() * adjlen);
+  var randomNumberNoun = parseInt(Math.random() * nounlen);
   return generator(adjectives[randomNumberAdj], nouns[randomNumberNoun]);
 }
 
@@ -495,22 +496,27 @@ function logAverageFrame(times) {   // times is updatePositions()
 // The following code for sliding background pizzas was pulled from Ilya's demo at:
 // https://www.igvita.com/slides/2012/devtools-tips-and-tricks/jank-demo.html
 
-// moved document.getElementsByClassName outside of function
-
-var frame = 0;
-
 // Moves the sliding background pizzas based on scroll position
+
 function updatePositions() {
   frame++;
   window.performance.mark("mark_start_frame");
-  var items = document.getElementsByClassName('mover');
-  var len = items.length;
-  var phase = [null, null, null, null, null];
 
-   for (var i = 0; i < len; i++) { 
-      phase = Math.sin((document.body.scrollTop / 1250) + (i % 5)); 
-      items[i].style.left = items[i].basicLeft + 100 * phase + 'px'; 
-   } 
+  var items = document.getElementsByClassName('mover');
+//JKB - Created array for phase values
+  var phase = [0.95, 0.25, -0.67, -0.98, 0.77, 0.65, 0.15];
+  var phaseLength = phase.length;
+  var index = 0;
+//JKB - cached item.length into variable
+  var itemLength = items.length;
+
+  for (var i = 0; i < itemLength; i++) {
+    //JKB - index resets to 0 when phaseLength is reached
+    index = (index + 1) % phaseLength;
+    thisPhase = phase[index] * (document.body.scrollTop / 1250) + (i % 5);
+    items[i].style.left = items[i].basicLeft + 100 * thisPhase + 'px';
+  }
+
 
   // User Timing API to the rescue again. Seriously, it's worth learning.
   // Super easy to create custom metrics.
@@ -519,7 +525,7 @@ function updatePositions() {
   if (frame % 10 === 0) {
     var timesToUpdatePosition = window.performance.getEntriesByName("measure_frame_duration");
     logAverageFrame(timesToUpdatePosition);
-  }
+    }
 }
 
 // runs updatePositions on scroll
@@ -529,9 +535,8 @@ window.addEventListener('scroll', updatePositions);
 document.addEventListener('DOMContentLoaded', function() {
   var cols = 8;
   var s = 256;
-  // num is result of resoultion width / elem.style.width * cols
-  var num = window.screen.availWidth / 73 * 8;
-  for (var i = 0; i < 200; i++) {
+  //Changed to 28 pizzas which should be more than enough on a page at once
+  for (var i = 0; i < 28; i++) {
     var elem = document.createElement('img');
     elem.className = 'mover';
     elem.src = "images/pizza.png";
@@ -539,10 +544,9 @@ document.addEventListener('DOMContentLoaded', function() {
     elem.style.width = "73.333px";
     elem.basicLeft = (i % cols) * s;
     elem.style.top = (Math.floor(i / cols) * s) + 'px';
-    document.getElementById("movingPizzas1").appendChild(elem);
+    document.querySelector("#movingPizzas1").appendChild(elem);
   }
   updatePositions();
 });
-
 
 
