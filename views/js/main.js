@@ -331,7 +331,6 @@ var selectRandomCrust = function() {
   return randomCrust;
 }
 
-
 var ingredientItemizer = function(string) {
   return "<li>" + string + "</li>";
 };
@@ -422,8 +421,9 @@ var resizePizzas = function(size) {
         console.log("bug in changeSliderLabel");
     }
   
-   /* ***** variable "randomPizzas" is now outside of the for loop ***** */
-    /* ***** "querySelectorAll" replaced for "getElementsByClassName" ***** */
+   /*  variable "randomPizzas" is now outside of the for loop  
+     "querySelectorAll" replaced for "getElementsByClassName" 
+     */
     var randomPizzas = document.getElementsByClassName("randomPizzaContainer");
     for (var i = 0; i < randomPizzas.length; i++) {
       randomPizzas[i].style.width = newWidth + '%';
@@ -485,17 +485,20 @@ function updatePositions() {
   window.performance.mark("mark_start_frame");
 
   /* Is there a faster way to access the DOM than querySelectorAll? */
-  /* ***** "phase" calculation optimized ***** */
+  /* "phase" calculation optimized  */
   var scrollValue = (document.body.scrollTop / 1250);
   var phase = [Math.sin(scrollValue), Math.sin(scrollValue+1), Math.sin(scrollValue+2), Math.sin(scrollValue+3), Math.sin(scrollValue+4)];
   var resultPhase;
-  for (var i = 0; i < moverItems.length; i++) {
+  var moverlen = moverItems.length;
+  for (var i = 0; i < moverlen; i++) {
     /* What are the exact numbers that phase and document.body.scrollTop give me per iteration?
        Furthermore we see that the phase value depends on the modulo operator '%'. Modulo gives us the remainder when we divide i by 5.
        Therefore we are calculating the same set of 5 numbers for all of our pizzas no matter how big our list of pizzas are!
     */
     resultPhase = phase[(i % 5)];
     /* ***** END OF "phase" calculation optimized ***** */
+    
+    
     // Let's log out all these numbers and see!  Change code to improve performance
     //console.log("phase[(i % 5)]: " + phase[(i % 5)]  + ", resultPhase: " + resultPhase + ", i: " + i + ", modulo: " + (i % 5));
 
@@ -515,7 +518,7 @@ function updatePositions() {
     var timesToUpdatePosition = window.performance.getEntriesByName("measure_frame_duration");
     logAverageFrame(timesToUpdatePosition);
   }
-}
+}`
 
 // runs updatePositions on scroll
 window.addEventListener('scroll', updatePositions);
@@ -544,7 +547,7 @@ document.addEventListener('DOMContentLoaded', function() {
     elem.style.width = "73.333px";
     elem.basicLeft = (i % cols) * s;
     elem.style.top = (Math.floor(i / cols) * s) + 'px';
-    /* ***** "querySelector" replaced for "getElementById" ***** */
+    /* "querySelector" replaced for "getElementById" */
     document.getElementById ("movingPizzas1").appendChild(elem);
   }
   updatePositions();
