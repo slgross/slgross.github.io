@@ -343,7 +343,8 @@ var makeRandomPizza = function() {
   var numberOfMeats = Math.floor((Math.random() * 4));
   var numberOfNonMeats = Math.floor((Math.random() * 3));
   var numberOfCheeses = Math.floor((Math.random() * 2));
-
+  var numberOfLoops = Math.max (numberOfMeats, numberOfNonMeats, numberOfCheeses);
+  
  //replace with one loop
    for (var i = 0; i < numberOfLoops; i++) {
     if (numberOfMeats <= i) {
@@ -446,9 +447,6 @@ window.performance.measure("measure_pizza_generation", "mark_start_generating", 
 var timeToGenerate = window.performance.getEntriesByName("measure_pizza_generation");
 console.log("Time to generate pizzas on load: " + timeToGenerate[0].duration + "ms");
 
-// Iterator for number of times the pizzas in the background have scrolled.
-// Used by updatePositions() to decide when to log the average time per frame
-var frame = 0;
 
 // Logs the average amount of time per 10 frames needed to move the sliding background pizzas on scroll.
 function logAverageFrame(times) {   // times is the array of User Timing measurements from updatePositions()
@@ -462,19 +460,20 @@ function logAverageFrame(times) {   // times is the array of User Timing measure
 
 // The following code for sliding background pizzas  from Ilya's demo found at:
 // https://www.igvita.com/slides/2012/devtools-tips-and-tricks/jank-demo.html
+
 // replace document.querySelectorAll with faster document.getElementsByClassName
 // moved document.getElementsByClassName outside of function
-
+var frame = 0;  // Used by updatePositions()  to log the average time per frame
 var items = document.getElementsByClassName('mover');
 
 // Moves the sliding background pizzas based on scroll position
 function updatePositions() {
   frame++;
   window.performance.mark("mark_start_frame");
-  var len = items.length;
+  var itemsLength = items.length;
   var phases = [null, null, null, null, null];
 
-  for (var i = 0; i < len; i++) {
+    for (var i = 0; i < itemsLength; i++) {
     var j = i % 5;
     // the below calculation repeats, so only do it the first five times
     if ( phases[j] === null) {
@@ -488,7 +487,7 @@ function updatePositions() {
   // Super easy to create custom metrics.
   window.performance.mark("mark_end_frame");
   window.performance.measure("measure_frame_duration", "mark_start_frame", "mark_end_frame");
-  if (frame % 10 === 0) {
+  if (frame % 10 === 0) {  //After 10 frames measure, and display result to console
     var timesToUpdatePosition = window.performance.getEntriesByName("measure_frame_duration");
     logAverageFrame(timesToUpdatePosition);
   }
