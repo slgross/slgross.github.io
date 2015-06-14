@@ -533,9 +533,9 @@ window.addEventListener('scroll', updatePositions);
 document.addEventListener('DOMContentLoaded', function() {
   var cols = 8;
   var s = 256;
-  //num is result of resoultion widh / elem.style.width * cols;
+  // num is result of resoultion width / elem.style.width * cols
   var num = window.screen.availWidth / 73 * 8;
-  for (var i = 0; i < num; i++) {
+  for (var i = 0; i < 200; i++) {
     var elem = document.createElement('img');
     elem.className = 'mover';
     elem.src = "images/pizza.png";
@@ -547,4 +547,6 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   updatePositions();
 });
-   
+
+
+
