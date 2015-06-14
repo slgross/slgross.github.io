@@ -386,7 +386,6 @@ var pizzaElementGenerator = function(i) {
   pizzaImageContainer.appendChild(pizzaImage);
   pizzaContainer.appendChild(pizzaImageContainer);
 
-
   pizzaDescriptionContainer.classList.add("col-md-6");
 
   pizzaName = document.createElement("h4");
@@ -405,7 +404,8 @@ var pizzaElementGenerator = function(i) {
 var resizePizzas = function(size) { 
   window.performance.mark("mark_start_resize");   // User Timing API function
 
-  // Changes the value for the size of the pizza above the slider
+
+ // Changes the value for the size of the pizza above the slider
   function changeSliderLabel(size) {
     switch(size) {
       case "1":
@@ -421,15 +421,31 @@ var resizePizzas = function(size) {
         console.log("bug in changeSliderLabel");
     }
   
-   /*  variable "randomPizzas" is now outside of the for loop  
-     "querySelectorAll" replaced for "getElementsByClassName" 
-     */
-    var randomPizzas = document.getElementsByClassName("randomPizzaContainer");
-    for (var i = 0; i < randomPizzas.length; i++) {
-      randomPizzas[i].style.width = newWidth + '%';
+ function changePizzaSizes(size) {
+  // resize pizza container.
+    switch(size){
+      case "1":
+        newwidth = 25;
+        break;
+      case "2":
+        newwidth = 33.3;
+        break;
+      case "3":
+        newwidth = 50;
+        break;
+      default:
+        console.log("bug in sizeSwitcher");
+    }
+
+    //remove duplicate and unnecessary code.
+    var randomPizzas = document.getElementsByClassName("randomPizzaContainer");    
+    for (var i = 0; i < randomPizzas.length; i++) {     
+      randomPizzas[i].style.width = newwidth + "%";
     }
   }
-  /* ***** END OF "changePizzaSizes" function optimized ***** */
+  changePizzaSizes(size);
+
+// END OF "changePizzaSizes" function optimized 
 
   /* Advanced: Since the pizza widths are change the same width, is there a way to set the width all at once? Perhaps we can use CSS to set the width
      of 'randomPizzaContainer'?
@@ -437,7 +453,7 @@ var resizePizzas = function(size) {
 
   changePizzaSizes(size);
 
-  // User Timing API is awesome
+// User Timing API is awesome
   window.performance.mark("mark_end_resize");
   window.performance.measure("measure_pizza_resize", "mark_start_resize", "mark_end_resize");
   var timeToResize = window.performance.getEntriesByName("measure_pizza_resize");
@@ -447,8 +463,7 @@ var resizePizzas = function(size) {
 window.performance.mark("mark_start_generating"); // collect timing data
 
 // This for-loop actually creates and appends all of the pizzas when the page loads
-/* ***** variable "pizzasDiv" is now outside of the for loop ***** */
-/* ***** "querySelector" replaced for "getElementById" ***** */
+// "querySelector" replaced for "getElementById
 var pizzasDiv = document.getElementById("randomPizzas");
 for (var i = 2; i < 100; i++) {
   pizzasDiv.appendChild(pizzaElementGenerator(i));
@@ -476,38 +491,25 @@ function logAverageFrame(times) {   // times is the array of User Timing measure
 
 // Code for sliding background pizzas was pulled from Ilya's demo found at:
 // https://www.igvita.com/slides/2012/devtools-tips-and-tricks/jank-demo.html
+var scrollY;
+
+//When scrolling the, this function call and run updatePosition funciton.
+function onScroll(){
+    updatePositions();
+}
 
 // Moves the sliding background pizzas based on scroll position
-
-var moverItems = document.getElementsByClassName("mover");
 function updatePositions() {
   frame++;
   window.performance.mark("mark_start_frame");
-
-  /* Is there a faster way to access the DOM than querySelectorAll? */
-  /* "phase" calculation optimized  */
-  var scrollValue = (document.body.scrollTop / 1250);
-  var phase = [Math.sin(scrollValue), Math.sin(scrollValue+1), Math.sin(scrollValue+2), Math.sin(scrollValue+3), Math.sin(scrollValue+4)];
-  var resultPhase;
-  var moverlen = moverItems.length;
-  for (var i = 0; i < moverlen; i++) {
-    /* What are the exact numbers that phase and document.body.scrollTop give me per iteration?
-       Furthermore we see that the phase value depends on the modulo operator '%'. Modulo gives us the remainder when we divide i by 5.
-       Therefore we are calculating the same set of 5 numbers for all of our pizzas no matter how big our list of pizzas are!
-    */
-    resultPhase = phase[(i % 5)];
-    /* ***** END OF "phase" calculation optimized ***** */
-    
-    
-    // Let's log out all these numbers and see!  Change code to improve performance
-    //console.log("phase[(i % 5)]: " + phase[(i % 5)]  + ", resultPhase: " + resultPhase + ", i: " + i + ", modulo: " + (i % 5));
-
-    /* Using style.left, is there a more efficient way to change the position of this object?
-       It looks like the Layout gets re-triggered everytime we scroll. Remember how the browser renders our objects?
-         -> DOM -> CSSOM <-> JavaScript -> Render Tree -> Layout -> Paint
-       The CSS 'transform' property can help us here.
-    */
-    moverItems[i].style.left = moverItems[i].basicLeft + 100 * resultPhase + 'px';
+  
+  //reduce repeated code.
+  var y = scrollY / 1250;
+  var items = document.getElementsByClassName('mover');
+  var phase;
+  for (var i = 0; i < items.length; i++) {
+    phase = Math.sin(y + (i % 5));
+    items[i].style.left = items[i].basicLeft + (100 * phase)+ 'px';
   }
 
   // User Timing API to the rescue again. Seriously, it's worth learning.
@@ -518,28 +520,21 @@ function updatePositions() {
     var timesToUpdatePosition = window.performance.getEntriesByName("measure_frame_duration");
     logAverageFrame(timesToUpdatePosition);
   }
-}`
+}
 
 // runs updatePositions on scroll
 window.addEventListener('scroll', updatePositions);
 
 // Generates the sliding pizzas when the page loads.
-document.addEventListener('DOMContentLoaded', function() {
+  document.addEventListener('DOMContentLoaded', function() {
+      //num is result of resoultion widh / elem.style.width * cols
   var s = 256;
+  //var screenWidth = window.screen.width, screenHeight = window.screen.height;
+  var cols = 8;
+  //var rows = Math.round(screenHeight/260); // Add one row for each 266 px;
+  var num = window.screen.availWidth / 73 * 8;
 
-  /* We could only see a handful of pizzas that show up on the screen at any given scroll. That amount doesn't look like 200 pizzas to me.... */
-  /* **** number of background pizzas calculated dinamically for each device's width and height **** */
-  var screenWidth = window.screen.width, screenHeight = window.screen.height;
-  var cols = Math.round(screenWidth/300)+2; // Add one pizza to the row for each 300 px;
-  var rows = Math.round(screenHeight/260); // Add one row for each 266 px;
-
-  if( screenWidth<screenHeight ) { // Portrait
-    cols *= 2; rows *= 4;
-  }
-
-  var maxPizzas = cols*rows;
-
-  for (var i = 0; i < maxPizzas; i++) {
+  for (var i = 0; i < num; i++) {
     var elem = document.createElement('img');
     elem.className = 'mover';
     elem.src = "images/pizza.png";
@@ -547,7 +542,7 @@ document.addEventListener('DOMContentLoaded', function() {
     elem.style.width = "73.333px";
     elem.basicLeft = (i % cols) * s;
     elem.style.top = (Math.floor(i / cols) * s) + 'px';
-    /* "querySelector" replaced for "getElementById" */
+    // querySelector" replaced for "getElementById"
     document.getElementById ("movingPizzas1").appendChild(elem);
   }
   updatePositions();
