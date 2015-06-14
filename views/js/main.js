@@ -331,7 +331,6 @@ var selectRandomCrust = function() {
   return randomCrust;
 }
 
-
 var ingredientItemizer = function(string) {
   return "<li>" + string + "</li>";
 };
@@ -346,7 +345,7 @@ var makeRandomPizza = function() {
   var numL = Math.max (numberOfMeats, numberOfNonMeats, numberOfCheeses);  //add
   
  //replace with one loop
-   for (var i = 0; i < numL; i++) {
+   for (var i = 0; i <= numL; i++) {
     if (numberOfMeats <= i) {
       pizza = pizza + ingredientItemizer(selectRandomMeat());
     };
@@ -447,17 +446,19 @@ var resizePizzas = function(size) {
     }
     var newsize = sizeSwitcher(size);
     var dx = (newsize - oldsize) * windowwidth;
-
     return dx;
   }
 
   // Iterates through pizzas  on the page and changes widths
+  // lements with classname "randomPizzaContainer"
   function changePizzaSizes(size) {
     var pizzaContainers = document.getElementsByClassName("randomPizzaContainer");
+    var windowwidth = document.getElementById("randomPizzas").offsetWidth;
     var len = pizzaContainers.length;
-    var dx = determineDx(pizzaContainers[0], size);
-    var newwidth = (pizzaContainers[0].offsetWidth + dx) + 'px';
+
     for (var i = 0; i < len; i++) {
+      var dx = determineDx(pizzaContainers[i], size);
+      var newwidth = (pizzaContainers[i].offsetWidth + dx) + 'px';
       pizzaContainers[i].style.width = newwidth;
     }
   }
