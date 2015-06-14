@@ -343,10 +343,10 @@ var makeRandomPizza = function() {
   var numberOfMeats = Math.floor((Math.random() * 4));
   var numberOfNonMeats = Math.floor((Math.random() * 3));
   var numberOfCheeses = Math.floor((Math.random() * 2));
-  var numberOfLoops = Math.max (numberOfMeats, numberOfNonMeats, numberOfCheeses);
+  var numL = Math.max (numberOfMeats, numberOfNonMeats, numberOfCheeses);  //add
   
  //replace with one loop
-   for (var i = 0; i < numberOfLoops; i++) {
+   for (var i = 0; i < numL; i++) {
     if (numberOfMeats <= i) {
       pizza = pizza + ingredientItemizer(selectRandomMeat());
     };
@@ -428,7 +428,7 @@ var resizePizzas = function(size) {
   // Returns the size difference to change a pizza element from one size to another. Called by changePizzaSlices(size).
   function determineDx (elem, size) {
     var oldwidth = elem.offsetWidth;
-    // replace document.querySelector with  document.getElementById
+    // replace document.querySelector
     var windowwidth = document.getElementById('randomPizzas').offsetWidth;
     var oldsize = oldwidth / windowwidth;
 
@@ -471,13 +471,15 @@ var resizePizzas = function(size) {
 }; 
 // End of resize pizzas
 
-window.performance.mark("mark_start_generating"); // collect timing data
+// collect timing data
+window.performance.mark("mark_start_generating"); 
 
-// This for-loop actually creates and appends all of the pizzas when the page loads
-pizzasDiv.appendChild(pizzaElementGenerator(i));
+// loop  creates and adds the pizzas when the page loads
+
 for (var i = 2; i < 100; i++) {
   // replace document.querySelector 
   var pizzasDiv = document.getElementById("randomPizzas");
+  pizzasDiv.appendChild(pizzaElementGenerator(i));
 }
 
 // User Timing API again. These measurements tell you how long it took to generate the initial pizzas
@@ -486,9 +488,9 @@ window.performance.measure("measure_pizza_generation", "mark_start_generating", 
 var timeToGenerate = window.performance.getEntriesByName("measure_pizza_generation");
 console.log("Time to generate pizzas on load: " + timeToGenerate[0].duration + "ms");
 
-
 // Logs the average amount of time per 10 frames needed to move the sliding background pizzas on scroll.
-function logAverageFrame(times) {   // times is the array of User Timing measurements from updatePositions()
+
+function logAverageFrame(times) {   // times is updatePositions()
   var numberOfEntries = times.length;
   var sum = 0;
   for (var i = numberOfEntries - 1; i > numberOfEntries - 11; i--) {
@@ -538,9 +540,10 @@ window.addEventListener('scroll', updatePositions);
 document.addEventListener('DOMContentLoaded', function() {
   var cols = 8;
   var s = 256;
+  var numPizzas = window.screen.availWidth / 73 * 8;
   // calculate number of pizzas to fill window with a max of 32
-  var numPizzas = ( cols * ( Math.max ( window.screen.availHeight, window.screen.availWidth ) / s ) );
-  numPizzas = Math.max ( 32, numPizzas ); // numPizzas can't be lower than 32
+  //var numPizzas = ( cols * ( Math.max ( window.screen.availHeight, window.screen.availWidth ) / s ) );
+  //numPizzas = Math.max ( 32, numPizzas ); // numPizzas can't be lower than 32
   for (var i = 0; i < numPizzas; i++) {
     var elem = document.createElement('img');
     elem.className = 'mover';
