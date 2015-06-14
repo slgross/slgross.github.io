@@ -284,23 +284,20 @@ var adjlen = adjectives.length;
 var nounlen = noun.length;
 // Generates random numbers for getAdj and getNoun functions and returns a new pizza name
 function generator(adj, noun) {
-  var adjectives = getAdj(adj);
-  var nouns = getNoun(noun);
-  var randomAdjective = parseInt(Math.random() * adjlen);
-  var randomNoun = parseInt(Math.random() * nounlen);
+  var randomAdjective = parseInt(Math.random() * adjectives.length);
+  var randomNoun = parseInt(Math.random() * noun.length);
   var name = "The " + adjectives[randomAdjective].capitalize() + " " + nouns[randomNoun].capitalize();
   return name;
 }
 
 // Chooses random adjective and random noun
 function randomName() {
-  var randomNumberAdj = parseInt(Math.random() * adjlen);
-  var randomNumberNoun = parseInt(Math.random() * nounlen);
+  var randomNumberAdj = parseInt(Math.random() * adjectives.length);
+  var randomNumberNoun = parseInt(Math.random() * noun.length);
   return generator(adjectives[randomNumberAdj], nouns[randomNumberNoun]);
 }
 
 // These functions return a string of a random ingredient from each respective category of ingredients.
-
 // cache the length calculation so it's not done in the function each time
 var meatLength = pizzaIngredients.meats.length;
 var selectRandomMeat = function() {
@@ -346,14 +343,11 @@ var makeRandomPizza = function() {
   for (var j = 0; j < numberOfNonMeats; j++) { 
     pizza = pizza + ingredientItemizer(selectRandomNonMeat()); 
   }
- 
  for (var k = 0; k < numberOfCheeses; k++) { 
     pizza = pizza + ingredientItemizer(selectRandomCheese()); 
   }
- 
   pizza = pizza + ingredientItemizer(selectRandomSauce());
   pizza = pizza + ingredientItemizer(selectRandomCrust());
-
   return pizza;
 };
 
@@ -416,7 +410,7 @@ var resizePizzas = function(size) {
         console.log("bug in changeSliderLabel");
     }
   }
-   changeSliderLabel(size);
+  changeSliderLabel(size);
    
   // Returns the size difference to change a pizza element from one size to another. Called by changePizzaSlices(size).
   function determineDx (elem, size) {
@@ -463,7 +457,7 @@ var resizePizzas = function(size) {
   window.performance.measure("measure_pizza_resize", "mark_start_resize", "mark_end_resize");
   var timeToResize = window.performance.getEntriesByName("measure_pizza_resize");
   console.log("Time to resize pizzas: " + timeToResize[0].duration + "ms");
-}; 
+}
 // End of resize pizzas
 
 // collect timing data
