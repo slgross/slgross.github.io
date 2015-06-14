@@ -503,25 +503,21 @@ function logAverageFrame(times) {   // times is updatePositions()
 // https://www.igvita.com/slides/2012/devtools-tips-and-tricks/jank-demo.html
 
 // moved document.getElementsByClassName outside of function
-var items = document.getElementsByClassName('mover');
+
 var frame = 0;
 
 // Moves the sliding background pizzas based on scroll position
 function updatePositions() {
   frame++;
   window.performance.mark("mark_start_frame");
+  var items = document.getElementsByClassName('mover');
   var len = items.length;
-  var phases = [null, null, null, null, null];
+  var phase = [null, null, null, null, null];
 
-  for (var i = 0; i < len; i++) {
-    var j = i % 5;
-    // the below calculation repeats, so only do it the first five times
-    if ( phases[j] === null) {
-        phases[j] =Math.sin ( (document.body.scrollTop / 1250) + (j) );
-    }
-    var phase = phases[j];
-    items[i].style.left = items[i].basicLeft + 100 * phase + 'px';
-  }
+   for (var i = 0; i < len; i++) { 
+      phase = Math.sin((document.body.scrollTop / 1250) + (i % 5)); 
+      items[i].style.left = items[i].basicLeft + 100 * phase + 'px'; 
+   } 
 
   // User Timing API to the rescue again. Seriously, it's worth learning.
   // Super easy to create custom metrics.
@@ -541,9 +537,7 @@ document.addEventListener('DOMContentLoaded', function() {
   var cols = 8;
   var s = 256;
   var numPizzas = window.screen.availWidth / 73 * 8;
-  // calculate number of pizzas to fill window with a max of 32
-  //var numPizzas = ( cols * ( Math.max ( window.screen.availHeight, window.screen.availWidth ) / s ) );
-  //numPizzas = Math.max ( 32, numPizzas ); // numPizzas can't be lower than 32
+
   for (var i = 0; i < numPizzas; i++) {
     var elem = document.createElement('img');
     elem.className = 'mover';
