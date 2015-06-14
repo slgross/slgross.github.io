@@ -389,7 +389,6 @@ var pizzaElementGenerator = function(i) {
   pizzaImageContainer.appendChild(pizzaImage);
   pizzaContainer.appendChild(pizzaImageContainer);
 
-
   pizzaDescriptionContainer.classList.add("col-md-6");
 
   pizzaName = document.createElement("h4");
@@ -425,7 +424,49 @@ var resizePizzas = function(size) {
     }
    changeSliderLabel(size);
    
-     // User Timing API is awesome
+  // Returns the size difference to change a pizza element from one size to another. Called by changePizzaSlices(size).
+  function determineDx (elem, size) {
+    var oldwidth = elem.offsetWidth;
+    // replace document.querySelector with faster document.getElementById
+    var windowwidth = document.getElementById('randomPizzas').offsetWidth;
+    var oldsize = oldwidth / windowwidth;
+
+    // Changes the slider value to a percent width
+    function sizeSwitcher (size) {
+      switch(size) {
+        case "1":
+          return 0.25;
+        case "2":
+          return 0.3333;
+        case "3":
+          return 0.5;
+        default:
+          console.log("bug in sizeSwitcher");
+      }
+    }
+
+    var newsize = sizeSwitcher(size);
+    var dx = (newsize - oldsize) * windowwidth;
+
+    return dx;
+  }
+
+
+  // Iterates through pizza elements on the page and changes their widths
+  // replaced document.querySelectorAll with faster document.getElementsByClassName
+  function changePizzaSizes(size) {
+    var pizzaContainers = document.getElementsByClassName("randomPizzaContainer");
+    var len = pizzaContainers.length;
+    var dx = determineDx(pizzaContainers[0], size);
+    var newwidth = (pizzaContainers[0].offsetWidth + dx) + 'px';
+    for (var i = 0; i < len; i++) {
+      pizzaContainers[i].style.width = newwidth;
+    }
+  }
+
+  changePizzaSizes(size);
+
+  // User Timing API is awesome
   window.performance.mark("mark_end_resize");
   window.performance.measure("measure_pizza_resize", "mark_start_resize", "mark_end_resize");
   var timeToResize = window.performance.getEntriesByName("measure_pizza_resize");
@@ -447,6 +488,9 @@ window.performance.measure("measure_pizza_generation", "mark_start_generating", 
 var timeToGenerate = window.performance.getEntriesByName("measure_pizza_generation");
 console.log("Time to generate pizzas on load: " + timeToGenerate[0].duration + "ms");
 
+// Iterator for number of times the pizzas in the background have scrolled.
+// Used by updatePositions() to decide when to log the average time per frame
+var frame = 0;
 
 // Logs the average amount of time per 10 frames needed to move the sliding background pizzas on scroll.
 function logAverageFrame(times) {   // times is the array of User Timing measurements from updatePositions()
@@ -458,22 +502,20 @@ function logAverageFrame(times) {   // times is the array of User Timing measure
   console.log("Average time to generate last 10 frames: " + sum / 10 + "ms");
 }
 
-// The following code for sliding background pizzas  from Ilya's demo found at:
+// The following code for sliding background pizzas was pulled from Ilya's demo found at:
 // https://www.igvita.com/slides/2012/devtools-tips-and-tricks/jank-demo.html
-
 // replace document.querySelectorAll with faster document.getElementsByClassName
 // moved document.getElementsByClassName outside of function
-var frame = 0;  // Used by updatePositions()  to log the average time per frame
 var items = document.getElementsByClassName('mover');
 
 // Moves the sliding background pizzas based on scroll position
 function updatePositions() {
   frame++;
   window.performance.mark("mark_start_frame");
-  var itemsLength = items.length;
+  var len = items.length;
   var phases = [null, null, null, null, null];
 
-    for (var i = 0; i < itemsLength; i++) {
+  for (var i = 0; i < len; i++) {
     var j = i % 5;
     // the below calculation repeats, so only do it the first five times
     if ( phases[j] === null) {
@@ -487,11 +529,12 @@ function updatePositions() {
   // Super easy to create custom metrics.
   window.performance.mark("mark_end_frame");
   window.performance.measure("measure_frame_duration", "mark_start_frame", "mark_end_frame");
-  if (frame % 10 === 0) {  //After 10 frames measure, and display result to console
+  if (frame % 10 === 0) {
     var timesToUpdatePosition = window.performance.getEntriesByName("measure_frame_duration");
     logAverageFrame(timesToUpdatePosition);
   }
 }
+
 
 // runs updatePositions on scroll
 window.addEventListener('scroll', updatePositions);
@@ -517,5 +560,4 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   updatePositions();
 });
-   
    
