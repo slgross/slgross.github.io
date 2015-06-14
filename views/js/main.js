@@ -537,8 +537,7 @@ document.addEventListener('DOMContentLoaded', function() {
   var cols = 8;
   var s = 256;
   var numPizzas = window.screen.availWidth / (73 * 8);
-
-  for (var i = 0; i < numPizzas; i++) {
+  for (var i = 0; i < 200; i++) {
     var elem = document.createElement('img');
     elem.className = 'mover';
     elem.src = "images/pizza.png";
@@ -546,7 +545,7 @@ document.addEventListener('DOMContentLoaded', function() {
     elem.style.width = "73.333px";
     elem.basicLeft = (i % cols) * s;
     elem.style.top = (Math.floor(i / cols) * s) + 'px';
-    // replace document.querySelector("#movingPizzas1").appendChild(elem); with faster document.getElementById
+    // replace document.querySelector
     document.getElementById("movingPizzas1").appendChild(elem);
   }
   updatePositions();
