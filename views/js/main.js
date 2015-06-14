@@ -338,20 +338,17 @@ var makeRandomPizza = function() {
   var numberOfMeats = Math.floor((Math.random() * 4));
   var numberOfNonMeats = Math.floor((Math.random() * 3));
   var numberOfCheeses = Math.floor((Math.random() * 2));
-  var numL = Math.max (numberOfMeats, numberOfNonMeats, numberOfCheeses);  //add
   
- //replace with one loop
-   for (var i = 0; i <= numL; i++) {
-    if (numberOfMeats <= i) {
-      pizza = pizza + ingredientItemizer(selectRandomMeat());
-    };
-    if (numberOfNonMeats <= i) {
-      pizza = pizza + ingredientItemizer(selectRandomNonMeat());
-    };
-    if (numberOfCheeses <= i) {
-      pizza = pizza + ingredientItemizer(selectRandomCheese());
-    };
-  };
+ for (var i = 0; i < numberOfMeats; i++) { 
+     pizza = pizza + ingredientItemizer(selectRandomMeat()); 
+  } 
+  for (var j = 0; j < numberOfNonMeats; j++) { 
+    pizza = pizza + ingredientItemizer(selectRandomNonMeat()); 
+  }
+ 
+ for (var k = 0; k < numberOfCheeses; k++) { 
+    pizza = pizza + ingredientItemizer(selectRandomCheese()); 
+  }
  
   pizza = pizza + ingredientItemizer(selectRandomSauce());
   pizza = pizza + ingredientItemizer(selectRandomCrust());
@@ -445,7 +442,7 @@ var resizePizzas = function(size) {
     return dx;
   }
 
-  // Iterates through pizzas  on the page and changes widths
+  // Iterates through pizzas on the page and changes widths
   // lements with classname "randomPizzaContainer"
   function changePizzaSizes(size) {
     var pizzaContainers = document.getElementsByClassName("randomPizzaContainer");
@@ -472,7 +469,6 @@ var resizePizzas = function(size) {
 window.performance.mark("mark_start_generating"); 
 
 // loop  creates and adds the pizzas when the page loads
-
 for (var i = 2; i < 100; i++) {
   // replace document.querySelector 
   var pizzasDiv = document.getElementById("randomPizzas");
