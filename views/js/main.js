@@ -11,6 +11,11 @@ Creator:
 Cameron Pittman, Udacity Course Developer
 cameron *at* udacity *dot* com
 */
+// Create an array to hold the scrolling pizza elements to eliminate the DOM query
+var scrollPizzas = []
+
+//variable declared outside loops
+var windowwidth = document.getElementById("randomPizzas").offsetWidth;
 
 // As you may have realized, this website randomly generates pizzas.
 // Here are arrays of all possible pizza ingredients.
@@ -428,8 +433,6 @@ var resizePizzas = function(size) {
   // Returns the size difference to change a pizza element from one size to another. Called by changePizzaSlices(size).
   function determineDx (elem, size) {
     var oldwidth = elem.offsetWidth;
-    // replace document.querySelector with  document.getElementById
-    var windowwidth = document.getElementById('randomPizzas').offsetWidth;
     var oldsize = oldwidth / windowwidth;
 
     // Set the slider value to a percent width
@@ -474,9 +477,9 @@ var resizePizzas = function(size) {
 window.performance.mark("mark_start_generating"); // collect timing data
 
 // This for-loop actually creates and appends all of the pizzas when the page loads
-for (var i = 2; i < 100; i++) {
   // replace document.querySelector with document.getElementsById
   var pizzasDiv = document.getElementById("randomPizzas");
+for (var i = 2; i < 100; i++) {
   pizzasDiv.appendChild(pizzaElementGenerator(i));
 }
 
@@ -486,16 +489,17 @@ window.performance.measure("measure_pizza_generation", "mark_start_generating", 
 var timeToGenerate = window.performance.getEntriesByName("measure_pizza_generation");
 console.log("Time to generate pizzas on load: " + timeToGenerate[0].duration + "ms");
 
-// go for number of times the pizzas in the background have scrolled.
-// Used by updatePositions() to decide when to log the avg time/ frame
+// Used by updatePositions() to decide when to log the average time per frame
+var frame = 0
 
 // Logs the average amount of time per 10 frames needed to move the sliding background pizzas on scroll.
 // set variables outside of loop
 function logAverageFrame(times) {   // times is the array of User Timing measurements from updatePositions()
-  var numberOfEntries = times.length -11;
+  var times.length2 = times.length;
+  var numberOfEntries = times.length2 -11;
   var sum = 0;
-  var i = times.length -1;
-  for (i; i > numberOfEntries; i--) {
+
+  for (var i = times.length; i > numberOfEntries; i--) {
     sum = sum + times[i].duration;
   }
   console.log("Average time to generate last 10 frames: " + sum / 10 + "ms");
@@ -504,21 +508,19 @@ function logAverageFrame(times) {   // times is the array of User Timing measure
 // The following code for sliding background pizzas was pulled from Ilya's demo found at:
 // https://www.igvita.com/slides/2012/devtools-tips-and-tricks/jank-demo.html
 
-// moved document.getElementsByClassName outside of function
-var items = document.getElementsByClassName('mover');
-var frame = 0;
-
-// Moves the sliding background pizzas based on scroll position
+// Moves the sliding background scrollPizzas pizzas based on scroll position
 function updatePositions() {
   frame++;
   window.performance.mark("mark_start_frame");
+  
+//calculate variables outside of loop
   var len = items.length;
   var items = document.getElementsByClassName("mover"); 
   var value1 = document.body.scrollTop / 1250;
 
     for (var i = 0; i < len; i++) {
         var phase = Math.sin((value1) + (i % 5));
-        items[i].style.left = items[i].basicLeft + 100 * phase + 'px';
+        scrollPizzas[i].style.left = scrollPizzas[i].basicLeft + 100 * phase + 'px';
    }
 
   // User Timing API to the rescue again. Seriously, it's worth learning.
@@ -538,11 +540,11 @@ window.addEventListener('scroll', updatePositions);
 document.addEventListener('DOMContentLoaded', function() {
   var cols = 8;
   var s = 256;
-  // calculate number of pizzas to fill window
-  //var rows = Math.ceil((window.innerHeight / s));
- // var numPizzas = rows * cols;
-  var numPizzas = window.screen.availWidth / 73 * 8;
-  for (var i = 0; i < numPizzas; i++) {
+ //  calculate number of pizzas to fill window
+  var rows = Math.ceil((window.innerHeight / s));
+  var numPizzas = rows * cols;
+  //var numPizzas = window.screen.availWidth / 73 * 8;
+  for (var i = 0; i < numPizzas.length; i++) {
     var elem = document.createElement('img');
     elem.className = 'mover';
     elem.src = "images/pizza.png";
