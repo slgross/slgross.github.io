@@ -488,13 +488,12 @@ console.log("Time to generate pizzas on load: " + timeToGenerate[0].duration + "
 
 // go for number of times the pizzas in the background have scrolled.
 // Used by updatePositions() to decide when to log the avg time/ frame
-var frame = 0;
 
 // Logs the average amount of time per 10 frames needed to move the sliding background pizzas on scroll.
 function logAverageFrame(times) {   // times is the array of User Timing measurements from updatePositions()
   var numberOfEntries = times.length -11;
   var sum = 0;
-  var i = times.lenth -1;
+  var i = times.length -1;
   for (i; i > numberOfEntries; i--) {
     sum = sum + times[i].duration;
   }
