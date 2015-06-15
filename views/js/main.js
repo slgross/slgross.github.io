@@ -12,7 +12,7 @@ Cameron Pittman, Udacity Course Developer
 cameron *at* udacity *dot* com
 */
 // Create an array to hold the scrolling pizza elements to eliminate the DOM query
-var scrollPizzas = []
+var scrollPizzas = [];
 
 //variable declared outside loops
 var windowwidth = document.getElementById("randomPizzas").offsetWidth;
