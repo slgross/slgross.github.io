@@ -518,10 +518,10 @@ function updatePositions() {
     var j = i % 5;
     // the below calculation repeats, so only do it the first five times
     if ( phases[j] === null) {
-        phases[j] =Math.sin ( (document.body.scrollTop / 1250) + (j) );
+        phases[j] = Math.sin ( (document.body.scrollTop / 1250) + (j) );
     }
     var phase = phases[j];
-    items[i].style.left = items[i].basicLeft + 100 + phase + 'px';
+    items[i].style.left = phase * 100;
   }
 
   // User Timing API to the rescue again. Seriously, it's worth learning.
@@ -541,12 +541,9 @@ window.addEventListener('scroll', updatePositions);
 document.addEventListener('DOMContentLoaded', function() {
   var cols = 8;
   var s = 256;
- // var rows = Math.ceil((window.innerHeight / s));
+ // calculate number of pizzas to fill window
   var numPizzas = window.screen.availWidth / 73 * cols;
   
-  // calculate number of pizzas to fill window
-  // var numPizzas = ( cols * ( Math.max ( window.screen.availHeight, window.screen.availWidth ) / s ) );
-  // numPizzas = Math.max ( 43, numPizzas ); // numPizzas can't be lower than 43
   for (var i = 0; i < numPizzas; i++) {
     var elem = document.createElement('img');
     elem.className = 'mover';
@@ -555,10 +552,10 @@ document.addEventListener('DOMContentLoaded', function() {
     elem.style.width = "73.333px";
     elem.basicLeft = (i % cols) * s;
     elem.style.top = (Math.floor(i / cols) * s) + 'px';
-   // elem.style.left = (i % cols) * s + 'px';
+    elem.style.left = (i % cols) * s + 'px';
     // replace document.querySelector
     document.getElementById("movingPizzas1").appendChild(elem);
-   // scrollPizzas.push(elem);
+  
   }
   updatePositions();
 });
