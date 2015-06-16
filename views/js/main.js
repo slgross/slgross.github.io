@@ -493,13 +493,10 @@ console.log("Time to generate pizzas on load: " + timeToGenerate[0].duration + "
 var frame = 0;
 
 // Logs the average amount of time per 10 frames needed to move the sliding background pizzas on scroll.
-// set variables outside of loop
 function logAverageFrame(times) {   // times is the array of User Timing measurements from updatePositions()
-  var times.length2 = times.length;
-  var numberOfEntries = times.length2 -11;
+  var numberOfEntries = times.length;
   var sum = 0;
-
-  for (var i = times.length; i > numberOfEntries; i--) {
+  for (var i = numberOfEntries - 1; i > numberOfEntries - 11; i--) {
     sum = sum + times[i].duration;
   }
   console.log("Average time to generate last 10 frames: " + sum / 10 + "ms");
@@ -508,20 +505,27 @@ function logAverageFrame(times) {   // times is the array of User Timing measure
 // The following code for sliding background pizzas was pulled from Ilya's demo found at:
 // https://www.igvita.com/slides/2012/devtools-tips-and-tricks/jank-demo.html
 
-// Moves the sliding background scrollPizzas pizzas based on scroll position
+// moved document.getElementsByClassName outside of function
+var items = document.getElementsByClassName('mover');
+var frame = 0;
+
+// Moves the sliding background pizzas based on scroll position
 function updatePositions() {
   frame++;
   window.performance.mark("mark_start_frame");
-  
-//calculate variables outside of loop
   var len = items.length;
-  var items = document.getElementsByClassName("mover"); 
-  var value1 = document.body.scrollTop / 1250;
+  var phases = [null, null, null, null, null];
 
-    for (var i = 0; i < len; i++) {
-        var phase = Math.sin((value1) + (i % 5));
-        scrollPizzas[i].style.left = scrollPizzas[i].basicLeft + 100 * phase + 'px';
-   }
+  for (var i = 0; i < len; i++) {
+    var j = i % 5;
+    // the below calculation repeats, so only do it the first five times
+    if ( phases[j] === null) {
+        phases[j] =Math.sin ( (document.body.scrollTop / 1250) + (j) );
+    }
+
+    var phase = phases[j];
+    items[i].style.left = items[i].basicLeft + 100 * phase + 'px';
+  }
 
   // User Timing API to the rescue again. Seriously, it's worth learning.
   // Super easy to create custom metrics.
@@ -536,15 +540,18 @@ function updatePositions() {
 // runs updatePositions on scroll
 window.addEventListener('scroll', updatePositions);
 
+
 // Generates the sliding pizzas when the page loads.
 document.addEventListener('DOMContentLoaded', function() {
   var cols = 8;
   var s = 256;
- //  calculate number of pizzas to fill window
   var rows = Math.ceil((window.innerHeight / s));
   var numPizzas = rows * cols;
-  //var numPizzas = window.screen.availWidth / 73 * 8;
-  for (var i = 0; i < numPizzas.length; i++) {
+  
+  // calculate number of pizzas to fill window
+  // var numPizzas = ( cols * ( Math.max ( window.screen.availHeight, window.screen.availWidth ) / s ) );
+  // numPizzas = Math.max ( 43, numPizzas ); // numPizzas can't be lower than 43
+  for (var i = 0; i < numPizzas; i++) {
     var elem = document.createElement('img');
     elem.className = 'mover';
     elem.src = "images/pizza.png";
