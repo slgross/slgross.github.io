@@ -474,12 +474,12 @@ var resizePizzas = function(size) {
 window.performance.mark("mark_start_generating"); // collect timing data
 // go for number of times the pizzas in the background have scrolled.
 // Used by updatePositions() to decide when to log the avg time/ frame
-var frame = 0;
+
 
 // This for-loop actually creates and appends all of the pizzas when the page loads
-for (var i = 2; i < 100; i++) {
-  // replace document.querySelector with document.getElementsById
+  // replace document.querySelector with document.getElementsById and move out of the loop
   var pizzasDiv = document.getElementById("randomPizzas");
+for (var i = 2; i < 100; i++) {
   pizzasDiv.appendChild(pizzaElementGenerator(i));
 }
 
@@ -505,7 +505,7 @@ function logAverageFrame(times) {   // times is the array of User Timing measure
 
 // moved document.getElementsByClassName outside of function
 var items = document.getElementsByClassName('mover');
-
+var frame = 0;
 
 // Moves the sliding background pizzas based on scroll position
 function updatePositions() {
@@ -534,7 +534,6 @@ function updatePositions() {
   }
 }
 
-
 // runs updatePositions on scroll
 window.addEventListener('scroll', updatePositions);
 
@@ -542,8 +541,8 @@ window.addEventListener('scroll', updatePositions);
 document.addEventListener('DOMContentLoaded', function() {
   var cols = 8;
   var s = 256;
-  var rows = Math.ceil((window.innerHeight / s));
-  var numPizzas = rows * cols;
+ // var rows = Math.ceil((window.innerHeight / s));
+  var numPizzas = window.screen.availWidth / 73 * cols;
   
   // calculate number of pizzas to fill window
   // var numPizzas = ( cols * ( Math.max ( window.screen.availHeight, window.screen.availWidth ) / s ) );
@@ -552,16 +551,13 @@ document.addEventListener('DOMContentLoaded', function() {
     var elem = document.createElement('img');
     elem.className = 'mover';
     elem.src = "images/pizza.png";
-    // elem.src = "images/pizza_smaller.png";
     elem.style.height = "100px";
     elem.style.width = "73.333px";
     elem.basicLeft = (i % cols) * s;
     elem.style.top = (Math.floor(i / cols) * s) + 'px';
-    // replace document.querySelector("#movingPizzas1").appendChild(elem); with faster document.getElementById
+    // replace document.querySelector
     document.getElementById("movingPizzas1").appendChild(elem);
     scrollPizzas.push(elem);
   }
   updatePositions();
 });
-   
-
