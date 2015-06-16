@@ -512,13 +512,14 @@ function updatePositions() {
   frame++;
   window.performance.mark("mark_start_frame");
   var len = items.length;
+  var scrollVal = document.body.scrollTop / 1250;
   var phases = [null, null, null, null, null];
 // add suggested performance changes from reviewer ... little cleaner and slighty faster
   for (var i = 0; i < len; i++) {
     var j = i % 5;
     // the below calculation repeats, so only do it the first five times
     if ( phases[j] === null) {
-        phases[j] = Math.sin ( (document.body.scrollTop / 1250) + (j) );
+        phases[j] = Math.sin ( (scrollVal) + (j) );
     }
     var phase = phases[j];
     items[i].style.left = phase * 100;
