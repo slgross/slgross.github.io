@@ -12,8 +12,6 @@ Cameron Pittman, Udacity Course Developer
 cameron *at* udacity *dot* com
 */
 
-//variable declared outside loops
-var windowwidth = document.getElementById("randomPizzas").offsetWidth;
 
 // As you may have realized, this website randomly generates pizzas.
 // Here are arrays of all possible pizza ingredients.
@@ -294,12 +292,14 @@ function generator(adj, noun) {
   return name;
 }
 
+
 // Chooses random adjective and random noun
 function randomName() {
   var randomNumberAdj = parseInt(Math.random() * adjectives.length);
   var randomNumberNoun = parseInt(Math.random() * nouns.length);
   return generator(adjectives[randomNumberAdj], nouns[randomNumberNoun]);
 }
+
 
 // These functions return a string of a random ingredient from each respective category of ingredients.
 var selectRandomMeat = function() {
@@ -408,6 +408,7 @@ var pizzaElementGenerator = function(i) {
 var resizePizzas = function(size) { 
   window.performance.mark("mark_start_resize");   // User Timing API function
 
+
   // Changes the value for the size of the pizza above the slider
   function changeSliderLabel(size) {
     switch(size) {
@@ -430,7 +431,8 @@ var resizePizzas = function(size) {
   function determineDx (elem, size) {
     var oldwidth = elem.offsetWidth;
     var oldsize = oldwidth / windowwidth;
-
+    var windowwidth = document.getElementById('randomPizzas').offsetWidth;
+    
     // Set the slider value to a percent width
     function sizeSwitcher (size) {
       switch(size) {
@@ -453,13 +455,14 @@ var resizePizzas = function(size) {
   // Iterates through pizzas  on the page and changes widths
   function changePizzaSizes(size) {
     var pizzaContainers = document.getElementsByClassName("randomPizzaContainer");
-    var len = pizzaContainers.length;  // set up so container length doesnt havent to be calculated each time
+    var len = pizzaContainers.length;
     var dx = determineDx(pizzaContainers[0], size);
     var newwidth = (pizzaContainers[0].offsetWidth + dx) + 'px';
     for (var i = 0; i < len; i++) {
       pizzaContainers[i].style.width = newwidth;
     }
   }
+
   changePizzaSizes(size);
 
   // User Timing API is awesome
@@ -510,10 +513,10 @@ var frame = 0;
 function updatePositions() {
   frame++;
   window.performance.mark("mark_start_frame");
-  var len = items.length;
+  var itemlen = items.length;
   var phases = [null, null, null, null, null];
 
-  for (var i = 0; i < len; i++) {
+  for (var i = 0; i < itemlen; i++) {
     var j = i % 5;
     // the below calculation repeats, so only do it the first five times
     if ( phases[j] === null) {
@@ -546,7 +549,7 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // calculate number of pizzas to fill window
   // var numPizzas = ( cols * ( Math.max ( window.screen.availHeight, window.screen.availWidth ) / s ) );
-  // numPizzas = Math.max ( 43, numPizzas ); // numPizzas can't be lower than 43
+
   for (var i = 0; i < numPizzas; i++) {
     var elem = document.createElement('img');
     elem.className = 'mover';
