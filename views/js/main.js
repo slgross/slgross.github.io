@@ -312,27 +312,27 @@ var meatLength = pizzaIngredients.meats.length;
 var selectRandomMeat = function() {
   var randomMeat = pizzaIngredients.meats[Math.floor((Math.random() * meatLength))];
   return randomMeat;
-}
+};
 var nonmeatLength = pizzaIngredients.nonMeats.length;
 var selectRandomNonMeat = function() {
   var randomNonMeat = pizzaIngredients.nonMeats[Math.floor((Math.random() * nonmeatLength))];
   return randomNonMeat;
-}
+};
 var cheeseLength = pizzaIngredients.cheeses.length;
 var selectRandomCheese = function() {
   var randomCheese = pizzaIngredients.cheeses[Math.floor((Math.random() * cheeseLength))];
   return randomCheese;
-}
+};
 var sauceLength = pizzaIngredients.sauces.length;
 var selectRandomSauce = function() {
   var randomSauce = pizzaIngredients.sauces[Math.floor((Math.random() * sauceLength))];
   return randomSauce;
-}
+};
 var crustLength = pizzaIngredients.crusts.length;
 var selectRandomCrust = function() {
   var randomCrust = pizzaIngredients.crusts[Math.floor((Math.random() * crustLength))];
   return randomCrust;
-}
+};
 
 var ingredientItemizer = function(string) {
   return "<li>" + string + "</li>";
@@ -490,8 +490,9 @@ var frame = 0;
 
 // Logs the average amount of time per 10 frames needed to move the sliding background pizzas on scroll.
 function logAverageFrame(times) {   // times is the array of User Timing measurements from updatePositions()
-  var numberOfEntries = times.length;
   var sum = 0;
+  var numberOfEntries = times.length;
+
   for (var i = numberOfEntries - 1; i > numberOfEntries - 11; i--) {
     sum = sum + times[i].duration;
   }
@@ -551,8 +552,8 @@ document.addEventListener('DOMContentLoaded', function() {
     var elem = document.createElement('img');
     elem.className = 'mover';
     elem.src = "images/pizza.png";
-    elem.style.height = "100px";
     elem.style.width = "73.333px";
+    elem.style.height = "100px";
     elem.basicLeft = (i % cols) * s;
     elem.style.top = (Math.floor(i / cols) * s) + 'px';
     // replace query with document.getElementById
