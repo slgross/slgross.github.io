@@ -521,7 +521,7 @@ function updatePositions() {
         phases[j] =Math.sin ( (document.body.scrollTop / 1250) + (j) );
     }
     var phase = phases[j];
-    items[i].style.left = phase * 100;
+    items[i].style.left = items[i].basicLeft + 100 + phase + 'px';
   }
 
   // User Timing API to the rescue again. Seriously, it's worth learning.
@@ -555,7 +555,7 @@ document.addEventListener('DOMContentLoaded', function() {
     elem.style.width = "73.333px";
     elem.basicLeft = (i % cols) * s;
     elem.style.top = (Math.floor(i / cols) * s) + 'px';
-    elem.style.left = (i % cols) * s + 'px';
+   // elem.style.left = (i % cols) * s + 'px';
     // replace document.querySelector
     document.getElementById("movingPizzas1").appendChild(elem);
    // scrollPizzas.push(elem);
