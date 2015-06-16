@@ -11,8 +11,6 @@ Creator:
 Cameron Pittman, Udacity Course Developer
 cameron *at* udacity *dot* com
 */
-// Create an array to hold the scrolling pizza elements to eliminate the DOM query
-var scrollPizzas = [];
 
 //variable declared outside loops
 var windowwidth = document.getElementById("randomPizzas").offsetWidth;
@@ -336,7 +334,6 @@ var selectRandomCrust = function() {
   return randomCrust;
 }
 
-
 var ingredientItemizer = function(string) {
   return "<li>" + string + "</li>";
 };
@@ -350,7 +347,7 @@ var makeRandomPizza = function() {
   var numberOfCheeses = Math.floor((Math.random() * 2));
   var numberOfLoops = Math.max (numberOfMeats, numberOfNonMeats, numberOfCheeses);
   
- //replace with one loop
+ // replace with one loop, should be more efficient than 3 loops
    for (var i = 0; i < numberOfLoops; i++) {
     if (numberOfMeats <= i) {
       pizza = pizza + ingredientItemizer(selectRandomMeat());
@@ -365,7 +362,6 @@ var makeRandomPizza = function() {
  
   pizza = pizza + ingredientItemizer(selectRandomSauce());
   pizza = pizza + ingredientItemizer(selectRandomCrust());
-
   return pizza;
 };
 
@@ -479,9 +475,9 @@ window.performance.mark("mark_start_generating"); // collect timing data
 // This for-loop actually creates and appends all of the pizzas when the page loads
   // replace document.querySelector with document.getElementsById
   var pizzasDiv = document.getElementById("randomPizzas");
-for (var i = 2; i < 100; i++) {
-  pizzasDiv.appendChild(pizzaElementGenerator(i));
-}
+  for (var i = 2; i < 100; i++) {
+       pizzasDiv.appendChild(pizzaElementGenerator(i));
+  }
 
 // User Timing API again. These measurements tell you how long it took to generate the initial pizzas
 window.performance.mark("mark_end_generating");
@@ -536,12 +532,12 @@ function updatePositions() {
     logAverageFrame(timesToUpdatePosition);
   }
 }
-
 // runs updatePositions on scroll
 window.addEventListener('scroll', updatePositions);
 
 
 // Generates the sliding pizzas when the page loads.
+// moves variables out of for loop
 document.addEventListener('DOMContentLoaded', function() {
   var cols = 8;
   var s = 256;
@@ -555,12 +551,11 @@ document.addEventListener('DOMContentLoaded', function() {
     var elem = document.createElement('img');
     elem.className = 'mover';
     elem.src = "images/pizza.png";
-    // elem.src = "images/pizza_smaller.png";
     elem.style.height = "100px";
     elem.style.width = "73.333px";
     elem.basicLeft = (i % cols) * s;
     elem.style.top = (Math.floor(i / cols) * s) + 'px';
-    // replace document.querySelector("#movingPizzas1").appendChild(elem); with faster document.getElementById
+    // replace query with document.getElementById
     document.getElementById("movingPizzas1").appendChild(elem);
     scrollPizzas.push(elem);
   }
