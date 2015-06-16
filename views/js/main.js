@@ -452,7 +452,8 @@ var resizePizzas = function(size) {
     return dx;
   }
 
-  // Iterates through pizzas  on the page and changes widths
+  // goes through pizzas on the page and changes widths
+  // replaced document.querySelectorAll with faster document.getElementsByClassName
   function changePizzaSizes(size) {
     var pizzaContainers = document.getElementsByClassName("randomPizzaContainer");
     var len = pizzaContainers.length;
@@ -462,7 +463,6 @@ var resizePizzas = function(size) {
       pizzaContainers[i].style.width = newwidth;
     }
   }
-
   changePizzaSizes(size);
 
   // User Timing API is awesome
@@ -507,7 +507,7 @@ function logAverageFrame(times) {   // times is the array of User Timing measure
 
 // moved document.getElementsByClassName outside of function
 var items = document.getElementsByClassName('mover');
-var frame = 0;
+
 
 // Moves the sliding background pizzas based on scroll position
 function updatePositions() {
