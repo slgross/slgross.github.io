@@ -472,9 +472,12 @@ var resizePizzas = function(size) {
 // End of resize pizzas
 
 window.performance.mark("mark_start_generating"); // collect timing data
+// go for number of times the pizzas in the background have scrolled.
+// Used by updatePositions() to decide when to log the avg time/ frame
+var frame = 0;
 
 // This for-loop actually creates and appends all of the pizzas when the page loads
-for (var i = 2; i < 57; i++) {
+for (var i = 2; i < 100; i++) {
   // replace document.querySelector with document.getElementsById
   var pizzasDiv = document.getElementById("randomPizzas");
   pizzasDiv.appendChild(pizzaElementGenerator(i));
@@ -486,9 +489,6 @@ window.performance.measure("measure_pizza_generation", "mark_start_generating", 
 var timeToGenerate = window.performance.getEntriesByName("measure_pizza_generation");
 console.log("Time to generate pizzas on load: " + timeToGenerate[0].duration + "ms");
 
-// go for number of times the pizzas in the background have scrolled.
-// Used by updatePositions() to decide when to log the avg time/ frame
-var frame = 0;
 
 // Logs the average amount of time per 10 frames needed to move the sliding background pizzas on scroll.
 function logAverageFrame(times) {   // times is the array of User Timing measurements from updatePositions()
@@ -505,7 +505,7 @@ function logAverageFrame(times) {   // times is the array of User Timing measure
 
 // moved document.getElementsByClassName outside of function
 var items = document.getElementsByClassName('mover');
-var frame = 0;
+
 
 // Moves the sliding background pizzas based on scroll position
 function updatePositions() {
