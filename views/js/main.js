@@ -511,18 +511,21 @@ var frame = 0;
 function updatePositions() {
   frame++;
   window.performance.mark("mark_start_frame");
+  
   var len = items.length;
   var scrollVal = document.body.scrollTop / 1250;
-  var phases = [null, null, null, null, null];
+ //JKB - Created array for phase values
+  var phase = [0.95, 0.25, -0.67, -0.98, 0.77, 0.65, 0.15];
+  var phaseLength = phase.length;
+  var index = 0;
+  
 // add suggested performance changes from reviewer ... little cleaner and slighty faster
+ // index resets to 0 when phaseLength is reached
   for (var i = 0; i < len; i++) {
     var j = i % 5;
-    // the below calculation repeats, so only do it the first five times
-    if ( phases[j] === null) {
-        phases[j] = Math.sin ( (scrollVal) + (j) );
-    }
-    var phase = phases[j];
-    items[i].style.left = phase * 100;
+    index = (index + 1) % phaseLength;
+    thisPhase = phase[index] * (scrollVal) + (j);
+    items[i].style.left = items[i].basicLeft + 100 * thisPhase + 'px';
   }
 
   // User Timing API to the rescue again. Seriously, it's worth learning.
@@ -556,7 +559,6 @@ document.addEventListener('DOMContentLoaded', function() {
     elem.style.left = (i % cols) * s + 'px';
     // replace document.querySelector
     document.getElementById("movingPizzas1").appendChild(elem);
-  
   }
   updatePositions();
 });
